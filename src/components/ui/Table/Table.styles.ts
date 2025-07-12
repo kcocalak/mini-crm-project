@@ -2,19 +2,17 @@ import styled, { css } from 'styled-components';
 
 export const TableContainer = styled.div`
   width: 100%;
-  overflow-x: auto;
-  ${({ theme }) => theme.spacing(3)};
-  margin: ${({ theme }) => theme.spacing(2)} 0;
+  overflow: auto;
+  margin: ${({ theme }) => theme.spacing(3)} 0;
   max-height: 700px;
-  overflow-y: auto;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
+  border-radius: ${({ theme }) => theme.borderRadius.large};
+  border: 1px solid ${({ theme }) => theme.colors.divider};
 
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     background: none;
-    border-radius: ${({ theme }) => theme.borderRadius.medium};
   }
 
   &::-webkit-scrollbar-thumb {
@@ -25,36 +23,36 @@ export const TableContainer = styled.div`
 
 export const StyledTable = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: transparent;
-  min-width: 700px;
+  border-collapse: collapse;
+  min-width: 800px;
+  background: ${({ theme }) => theme.colors.background.paper};
+  table-layout: fixed;
 `;
 
-export const TableHeaderRow = styled.tr``;
+export const TableHeaderRow = styled.tr`
+  background: ${({ theme }) => theme.colors.background.default};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.divider};
+
+`;
 
 export const TableHeaderCell = styled.th<{ sortable?: boolean }>`
-  position: sticky;
-  top: 0;
-  z-index: 2;
   padding: 10px 16px;
   text-align: left;
   font-weight: 400;
-  font-size: ${({ theme }) => theme.typography.body2.fontSize};
-  background: ${({ theme }) => theme.colors.background.default};
+  font-size: 0.875rem;
   color: ${({ theme }) => theme.colors.text.neutral};
-  user-select: none;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
+  white-space: nowrap;
   cursor: ${({ sortable }) => (sortable ? 'pointer' : 'default')};
-  letter-spacing: 0.02em;
-  transition: background 0.2s;
+  transition: background-color 0.2s ease;
+  width: 25%;
 
   &:hover {
-    background: ${({ sortable, theme }) =>
-      sortable ? theme.colors.action.hover : theme.colors.background.default};
+    background-color: ${({ theme, sortable }) =>
+      sortable ? theme.colors.action.hover : 'transparent'};
   }
 
   &.table-header-cell--actions {
-    text-align: center;
     width: 120px;
   }
 `;
@@ -62,48 +60,49 @@ export const TableHeaderCell = styled.th<{ sortable?: boolean }>`
 export const TableHeaderContent = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing(1)};
 `;
 
 export const TableSortIndicator = styled.span`
-  font-size: 1.1rem;
-  margin-left: 4px;
-  color: ${({ theme }) => theme.colors.primary.main};
-  opacity: 0.7;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
-export const TableBody = styled.tbody`
-  background: ${({ theme }) => theme.colors.background.paper};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-`;
+export const TableBody = styled.tbody``;
 
 export const TableRow = styled.tr`
-  transition: background 0.18s;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
+  transition: background-color 0.2s ease;
+  height: 50px;
+  align-items:center;
+  flex:1;
+  width:100%;
+  
+
   &:hover {
-    background: ${({ theme }) => theme.colors.action.hover};
+    background-color: ${({ theme }) => theme.colors.action.hover};
   }
-  &.table-cell--actions {
-    text-align: center;
-  }
-  &:first-child td:first-child {
-    border-top-left-radius: 12px;
-  }
-  &:first-child td:last-child {
-    border-top-right-radius: 12px;
-  }
-  &:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-  }
-  &:last-child td:last-child {
-    border-bottom-right-radius: 12px;
+
+  &:last-child {
+    border-bottom: none;
   }
 `;
 
 export const TableCell = styled.td`
-  padding: ${({ theme }) => theme.spacing(1.5)} ${({ theme }) => theme.spacing(1)};
+  padding: 0 16px;
+  color: ${({ theme }) => theme.colors.text.primary};
   border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
-  font-size: ${({ theme }) => theme.typography.body2.fontSize};
-  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  width: 25%;
+  font-size:0.875rem;
+
+  &.table-cell--actions {
+    width: 120px;
+  }
 `;
 
 export const TableEmptyMessage = styled.td`

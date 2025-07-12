@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: string;
   createDate: Date;
+  active: boolean;
   location: {
     lat: number;
     lng: number;

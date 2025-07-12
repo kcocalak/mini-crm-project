@@ -1,16 +1,23 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { StyledButton } from './Button.styles';
+import { FullWidthButton, StyledButton } from './Button.styles';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger';
-  onClick: () => void;
+  variant?: 'primary' | 'secondary' | 'danger' | 'outline';
+  onClick?: () => void;
+  fullWidth?: boolean;
 }
 
-const Button = ({ variant = 'primary', ...props }: ButtonProps) => {
+const Button = ({ variant = 'primary', fullWidth = false, ...props }: ButtonProps) => {
   return (
-    <StyledButton {...props} variant={variant}>
-      {props.children}
-    </StyledButton>
+    fullWidth ? (
+      <FullWidthButton {...props} variant={variant}>
+        {props.children}
+      </FullWidthButton>
+    ) : (
+      <StyledButton {...props} variant={variant}>
+        {props.children}
+      </StyledButton>
+    )
   );
 };
 

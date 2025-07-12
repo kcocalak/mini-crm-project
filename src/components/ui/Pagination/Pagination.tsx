@@ -40,7 +40,6 @@ const TablePagination: React.FC<TablePaginationProps> = ({
     onPageChange(pageCount);
   };
 
-  // Show max 5 page buttons
   const getPages = () => {
     const pages = [];
     let start = Math.max(1, page - 2);

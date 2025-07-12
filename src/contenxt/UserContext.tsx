@@ -14,6 +14,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       role: faker.person.jobTitle(),
+      active: faker.datatype.boolean(),
       createDate: faker.date.past({ years: 1 }),
       location: {
         lat: faker.location.latitude(),

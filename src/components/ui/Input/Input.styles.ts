@@ -38,6 +38,6 @@ export const StyledInput = styled.input`
 
 export const InputError = styled.span`
   color: ${({ theme }) => theme.colors.error.main};
-  font-size: ${({ theme }) => theme.typography.caption.fontSize};
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
   margin-top: 2px;
 `;

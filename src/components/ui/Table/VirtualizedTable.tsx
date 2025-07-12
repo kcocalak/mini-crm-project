@@ -1,0 +1,231 @@
+import React from 'react';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import styled from 'styled-components';
+
+export interface Column<T> {
+  key: keyof T;
+  header: string;
+  width?: string;
+  render?: (value: any, row: T) => React.ReactNode;
+}
+
+interface VirtualizedTableProps<T> {
+  data: T[];
+  columns: Column<T>[];
+  height: string;
+  rowHeight?: number;
+  actions?: Array<{
+    label: string;
+    icon?: React.ReactNode;
+    onClick: (row: T) => void;
+    variant?: 'primary' | 'secondary' | 'danger' | 'outline';
+    disabled?: (row: T) => boolean;
+  }>;
+}
+
+const ROW_HEIGHT = 50;
+const MIN_TABLE_WIDTH = 800;
+
+
+const VirtualizedHeaderRow = styled.div`
+  display: flex;
+  background: ${({ theme }) => theme.colors.background.default};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.divider};
+  width: calc(100%-20px);
+  min-width: ${MIN_TABLE_WIDTH}px;
+  flex-shrink: 0;
+  padding-right: 16px;
+`;
+
+const VirtualizedRow = styled.div<{ isEven?: boolean }>`
+  display: flex;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
+  transition: background-color 0.2s ease;
+  min-width: ${MIN_TABLE_WIDTH}px;
+  background: ${({ theme }) => 
+    theme.colors.background.paper };
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.action.hover};
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const VirtualizedCell = styled.div<{ width?: string }>`
+  flex: ${({ width }) => (width ? 'none' : '1')};
+  width: ${({ width }) => width || 'auto'};
+  min-width: 0;
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+`;
+
+const VirtualizedTh = styled.div`
+  padding: 10px 16px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.colors.text.neutral};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
+  
+
+`;
+
+const VirtualizedTd = styled.div`
+  padding: 10px 16px;
+  color: ${({ theme }) => theme.colors.text.primary};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
+`;
+
+const ActionButton = styled.button<{ variant?: string; disabled?: boolean }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: transparent;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  font-size: 12px;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.action.hover};
+  }
+
+  ${({ variant, theme }) => {
+    switch (variant) {
+      case 'primary':
+        return `
+          background-color: ${theme.colors.primary.main};
+          color: white;
+          border-color: ${theme.colors.primary.main};
+        `;
+      case 'danger':
+        return `
+          background-color: ${theme.colors.error.main};
+          color: white;
+          border-color: ${theme.colors.error.main};
+        `;
+      case 'outline':
+        return `
+          background-color: transparent;
+          color: ${theme.colors.primary.main};
+          border-color: ${theme.colors.primary.main};
+        `;
+      default:
+        return `
+          background-color: transparent;
+          color: ${theme.colors.text.primary};
+          border-color: #ddd;
+        `;
+    }
+  }}
+`;
+
+const ActionsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const VirtualizedTable = <T extends object>({
+  data,
+  columns,
+  height,
+  rowHeight = ROW_HEIGHT,
+  actions = [],
+}: VirtualizedTableProps<T>) => {
+  const VirtualizedBody = ({ height, width }: { height: number; width: number }) => {
+    const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+      const row = data[index];
+      const isEven = index % 2 === 0;
+
+      return (
+        <VirtualizedRow style={style} isEven={isEven}>
+          {columns.map((column) => (
+            <VirtualizedCell key={String(column.key)} width={column.width}>
+              <VirtualizedTd>
+                {column.render
+                  ? column.render((row as any)[column.key], row)
+                  : String((row as any)[column.key] ?? '')}
+              </VirtualizedTd>
+            </VirtualizedCell>
+          ))}
+          {actions.length > 0 && (
+            <VirtualizedCell width="120px">
+              <VirtualizedTd>
+                <ActionsContainer>
+                  {actions.map((action, actionIndex) => {
+                    const isDisabled = action.disabled?.(row) || false;
+                    return (
+                      <ActionButton
+                        key={actionIndex}
+                        onClick={() => !isDisabled && action.onClick(row)}
+                        disabled={isDisabled}
+                        variant={action.variant}
+                      >
+                        {action.icon}
+                        {action.label}
+                      </ActionButton>
+                    );
+                  })}
+                </ActionsContainer>
+              </VirtualizedTd>
+            </VirtualizedCell>
+          )}
+        </VirtualizedRow>
+      );
+    };
+
+    return (
+      <List
+        height={height}
+        width={Math.max(width, MIN_TABLE_WIDTH)}
+        itemCount={data.length}
+        itemSize={rowHeight}
+        overscanCount={5}
+      >
+        {Row}
+      </List>
+    );
+  };
+
+  return (
+    <div style={{ 
+      height: height, 
+      border: '1px solid #ddd', 
+      borderRadius: '8px',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <VirtualizedHeaderRow>
+        {columns.map((column) => (
+          <VirtualizedCell key={String(column.key)} width={column.width}>
+            <VirtualizedTh>{column.header}</VirtualizedTh>
+          </VirtualizedCell>
+        ))}
+        {actions.length > 0 && (
+          <VirtualizedCell width="120px" >
+            <VirtualizedTh>Actions</VirtualizedTh>
+          </VirtualizedCell>
+        )}
+      </VirtualizedHeaderRow>
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <AutoSizer>
+          {({ height, width }) => <VirtualizedBody height={height} width={width} />}
+        </AutoSizer>
+      </div>
+    </div>
+  );
+};
+
+export default VirtualizedTable; 

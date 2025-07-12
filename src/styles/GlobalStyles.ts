@@ -14,7 +14,8 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    max-height: calc(100vh - 48px);
+    max-height: 100vh;
+    height:100vh;
   }
     body{
     padding: 24px 40px;

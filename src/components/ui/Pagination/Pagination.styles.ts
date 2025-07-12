@@ -29,6 +29,7 @@ export const PaginationButton = styled.button<{ active?: boolean }>`
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primary.light};
+    color: ${({ theme }) => theme.colors.white}
   }
 
   &:disabled {

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline';
 
 interface ButtonProps {
   variant?: ButtonVariant;
@@ -23,11 +23,20 @@ const variantStyles = {
   `,
   danger: css`
     background-color: ${({ theme }) => theme.colors.error.main};
-    color: ${({ theme }) => theme.colors.error.contrastText};
+    color: ${({ theme }) => theme.colors.white};
     &:hover {
       background-color: ${({ theme }) => theme.colors.error.dark};
     }
   `,
+  outline: css`
+          background: transparent;
+          color: ${({theme})=>theme.colors.primary.main};
+          border: 1px solid ${({theme})=>theme.colors.primary.main};
+          &:hover:enabled {
+            background: ${({theme})=>theme.colors.primary.light};
+            color: ${({theme})=>theme.colors.white};
+          }
+        `
 };
 
 export const StyledButton = styled.button<ButtonProps>`
@@ -59,4 +68,8 @@ export const StyledButton = styled.button<ButtonProps>`
   }
 
   ${({ variant = 'primary' }) => variantStyles[variant]}
+`;
+
+export const FullWidthButton = styled(StyledButton)`
+  width: 100%;
 `;
