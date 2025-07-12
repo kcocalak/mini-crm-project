@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import type { User } from '../types/User';
+import type { User } from '../constants/types/User';
 import { faker } from '@faker-js/faker';
 
 export const UserContext = createContext({

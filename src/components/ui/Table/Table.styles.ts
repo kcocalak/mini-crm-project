@@ -7,12 +7,14 @@ export const TableContainer = styled.div`
   margin: ${({ theme }) => theme.spacing(2)} 0;
   max-height: 700px;
   overflow-y: auto;
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
 
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     background: none;
+    border-radius: ${({ theme }) => theme.borderRadius.medium};
   }
 
   &::-webkit-scrollbar-thumb {
@@ -158,7 +160,7 @@ export const TableActionBtn = styled.button<{ variant?: string; disabled?: boole
       case 'danger':
         return css`
           background: ${theme.colors.error.main};
-          color: ${theme.colors.error.contrastText};
+          color: ${theme.colors.primary.contrastText};
           &:hover:enabled {
             background: ${theme.colors.error.dark};
           }

@@ -48,7 +48,7 @@ const Table: React.FC<TableProps> = ({
   data,
   actions = [],
   loading = false,
-  emptyMessage = 'Veri bulunamadı',
+  emptyMessage = 'No data found',
   onSort,
   className = '',
 }) => {
