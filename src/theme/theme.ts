@@ -1,25 +1,27 @@
 import type { DefaultTheme } from 'styled-components';
 export const colors = {
   primary: {
-    main: '#0D3A6B',
+    main: '#0b2b51',
     light: '#215080',
     dark: '#062449',
     contrastText: '#FFFFFF',
   },
   secondary: {
-    main: '#43B34A',
+    main: '#3ba935',
     light: '#60C268',
     dark: '#2F8A32',
     contrastText: '#FFFFFF',
   },
   background: {
-    default: '#FDFDFD',
+    default: '#EAEAEA',
     paper: '#FFFFFF',
+    disabled: '#E8EBEF',
   },
   text: {
     primary: '#0D3A6B',
     secondary: '#5C5C5C',
-    disabled: '#B8B8B8',
+    neutral: '#6F767E',
+    disabled: '#9CA1B2',
   },
   error: {
     main: '#D84343',
@@ -36,6 +38,11 @@ export const colors = {
     light: '#66BB6A',
     dark: '#388E3C',
   },
+  action: {
+    hover: '#E0E0E0',
+  },
+  white: '#FFFFFF',
+  divider: '#E0E0E0',
 };
 
 const spacing = (multiplier: number) => `${multiplier * 8}px`;

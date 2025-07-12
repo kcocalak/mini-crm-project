@@ -3,12 +3,15 @@ import { router } from './routes';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme/theme';
 import { GlobalStyles } from './styles';
+import { UserProvider } from './contenxt/UserContext';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </ThemeProvider>
   );
 }
