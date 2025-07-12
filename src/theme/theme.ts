@@ -93,7 +93,7 @@ export const theme: DefaultTheme = {
     button: {
       fontSize: '0.875rem',
       fontWeight: 500,
-      lineHeiht: "1.25rem",
+      lineHeiht: '1.25rem',
     },
   },
 };
