@@ -2,6 +2,13 @@ import { createContext, useContext, useState } from 'react';
 import type { User } from '../constants/types/User';
 import { faker } from '@faker-js/faker';
 
+const roles = [
+  'Admin',
+  'Manager',
+  'User',
+  'Guest',
+];
+
 export const UserContext = createContext<{
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
@@ -16,7 +23,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       id: faker.string.uuid(),
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      role: faker.person.jobTitle(),
+      role: roles[Math.floor(Math.random() * roles.length)],
       active: faker.datatype.boolean(),
       createDate: faker.date.past({ years: 1 }),
       location: {

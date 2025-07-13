@@ -7,7 +7,7 @@ export interface SidebarProps {
 export const SidebarContainer = styled.div<SidebarProps>`
 width: 250px;
 height: 100vh;
-background: #1a1a1a;
+background: ${({ theme }) => theme.colors.primary.main};
 color: white;
 position: fixed;
 left: 0;
@@ -21,7 +21,7 @@ transform: ${({ isOpen }) => (isOpen === false ? 'translateX(-100%)' : 'translat
 export const SidebarHeader = styled.div`
 padding: 20px;
 border-bottom: 1px solid #333;
-background:rgb(74, 74, 74);
+background:rgba(197, 221, 246, 0.42);
 `;
 
 export const Logo = styled.h1`

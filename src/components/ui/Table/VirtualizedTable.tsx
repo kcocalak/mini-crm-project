@@ -2,6 +2,7 @@ import React from 'react';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import styled from 'styled-components';
+import Button from '../Button';
 
 export interface Column<T> {
   key: keyof T;
@@ -85,50 +86,6 @@ const VirtualizedTd = styled.div`
   font-size: ${({ theme }) => theme.typography.body2.fontSize};
 `;
 
-const ActionButton = styled.button<{ variant?: string; disabled?: boolean }>`
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  background: transparent;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-  font-size: 12px;
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.action.hover};
-  }
-
-  ${({ variant, theme }) => {
-    switch (variant) {
-      case 'primary':
-        return `
-          background-color: ${theme.colors.primary.main};
-          color: white;
-          border-color: ${theme.colors.primary.main};
-        `;
-      case 'danger':
-        return `
-          background-color: ${theme.colors.error.main};
-          color: white;
-          border-color: ${theme.colors.error.main};
-        `;
-      case 'outline':
-        return `
-          background-color: transparent;
-          color: ${theme.colors.primary.main};
-          border-color: ${theme.colors.primary.main};
-        `;
-      default:
-        return `
-          background-color: transparent;
-          color: ${theme.colors.text.primary};
-          border-color: #ddd;
-        `;
-    }
-  }}
-`;
-
 const ActionsContainer = styled.div`
   display: flex;
   gap: 8px;
@@ -166,7 +123,7 @@ const VirtualizedTable = <T extends object>({
                   {actions.map((action, actionIndex) => {
                     const isDisabled = action.disabled?.(row) || false;
                     return (
-                      <ActionButton
+                      <Button
                         key={actionIndex}
                         onClick={() => !isDisabled && action.onClick(row)}
                         disabled={isDisabled}
@@ -174,7 +131,7 @@ const VirtualizedTable = <T extends object>({
                       >
                         {action.icon}
                         {action.label}
-                      </ActionButton>
+                      </Button>
                     );
                   })}
                 </ActionsContainer>

@@ -4,6 +4,7 @@ export const colors = {
     main: '#0b2b51',
     light: '#215080',
     dark: '#062449',
+    extraLight:'#007bff',
     contrastText: '#FFFFFF',
   },
   secondary: {

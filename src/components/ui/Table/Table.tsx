@@ -11,11 +11,11 @@ import {
   TableCell,
   TableEmptyMessage,
   TableActions,
-  TableActionBtn,
   TableLoading,
   TableSpinner,
   TableLoadingText,
 } from './Table.styles';
+import Button from '../Button';
 
 export interface TableColumn {
   key: string;
@@ -137,15 +137,13 @@ const Table: React.FC<TableProps> = ({
                       {actions.map((action, actionIndex) => {
                         const isDisabled = action.disabled?.(row) || false;
                         return (
-                          <TableActionBtn
-                            key={actionIndex}
+                            <Button key={actionIndex}
                             onClick={() => !isDisabled && action.onClick(row)}
                             variant={action.variant}
-                            disabled={isDisabled}
-                          >
-                            {action.icon}
-                            {action.label}
-                          </TableActionBtn>
+                            disabled={isDisabled}>
+                              {action.icon}
+                              {action.label}
+                            </Button>
                         );
                       })}
                     </TableActions>

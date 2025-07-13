@@ -30,10 +30,10 @@ const variantStyles = {
   `,
   outline: css`
           background: transparent;
-          color: ${({theme})=>theme.colors.primary.main};
-          border: 1px solid ${({theme})=>theme.colors.primary.main};
+          color: ${({theme})=>theme.colors.primary.extraLight};
+          border: 1px solid ${({theme})=>theme.colors.primary.extraLight};
           &:hover:enabled {
-            background: ${({theme})=>theme.colors.primary.light};
+            background: ${({theme})=>theme.colors.primary.extraLight};
             color: ${({theme})=>theme.colors.white};
           }
         `

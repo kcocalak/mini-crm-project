@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const TableContainer = styled.div`
   width: 100%;
@@ -119,81 +119,6 @@ export const TableActions = styled.div`
   justify-content: center;
 `;
 
-const actionBtnBase = css`
-  font-family: inherit;
-  font-size: ${({ theme }) => theme.typography.button.fontSize};
-  font-weight: ${({ theme }) => theme.typography.button.fontWeight};
-  line-height: ${({ theme }) => theme.typography.button.lineHeight};
-  padding: 6px 14px;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  border: none;
-  cursor: pointer;
-  transition:
-    background 0.18s,
-    color 0.18s,
-    box-shadow 0.18s,
-    opacity 0.18s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  outline: none;
-
-  &:focus-visible {
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.light};
-  }
-`;
-
-export const TableActionBtn = styled.button<{ variant?: string; disabled?: boolean }>`
-  ${actionBtnBase}
-  ${({ variant = 'secondary', theme }) => {
-    switch (variant) {
-      case 'primary':
-        return css`
-          background: ${theme.colors.primary.main};
-          color: ${theme.colors.primary.contrastText};
-          &:hover:enabled {
-            background: ${theme.colors.primary.dark};
-          }
-        `;
-      case 'danger':
-        return css`
-          background: ${theme.colors.error.main};
-          color: ${theme.colors.primary.contrastText};
-          &:hover:enabled {
-            background: ${theme.colors.error.dark};
-          }
-        `;
-      case 'outline':
-        return css`
-          background: transparent;
-          color: ${theme.colors.primary.main};
-          border: 1px solid ${theme.colors.primary.main};
-          &:hover:enabled {
-            background: ${theme.colors.primary.light};
-            color: ${theme.colors.white};
-          }
-        `;
-      default:
-        return css`
-          background: ${theme.colors.secondary.main};
-          color: ${theme.colors.secondary.contrastText};
-          &:hover:enabled {
-            background: ${theme.colors.secondary.dark};
-          }
-        `;
-    }
-  }}
-
-  &:disabled,
-  &.table-action-btn--disabled {
-    background: ${({ theme }) => theme.colors.background.disabled};
-    color: ${({ theme }) => theme.colors.text.disabled};
-    cursor: not-allowed;
-    opacity: 0.7;
-    box-shadow: none;
-  }
-`;
 
 export const TableLoading = styled.div`
   display: flex;
