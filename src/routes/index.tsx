@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router';
-import Layout from '../layouts';
+import Layout from '../components/Layout';
 
 import { UserList, UserDetail } from '../pages';
 

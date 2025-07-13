@@ -13,12 +13,20 @@ import Button from '../../components/ui/Button';
 import { Switch } from '../../components/ui/Switch/Switch';
 import styled from 'styled-components';
 
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+`;
+
 const ControlsContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 `;
 
 const SwitchContainer = styled.div`
@@ -35,6 +43,9 @@ const TableContainer = styled.div<{ isTransitioning: boolean }>`
   transition: opacity 0.3s ease, transform 0.3s ease;
   opacity: ${({ isTransitioning }) => (isTransitioning ? 0.7 : 1)};
   transform: ${({ isTransitioning }) => (isTransitioning ? 'scale(0.98)' : 'scale(1)')};
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 `;
 
 const LoadingOverlay = styled.div<{ visible: boolean }>`
@@ -65,6 +76,11 @@ const Spinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+`;
+
+const PaginationContainer = styled.div`
+  flex-shrink: 0;
+  margin-top: 16px;
 `;
 
 const UserList = () => {
@@ -223,7 +239,7 @@ const UserList = () => {
   }, [searchValue, page, pageSize, showAllUsers, users, setPageParams]);
 
   return (
-    <>
+    <PageContainer>
       <ControlsContainer>
         <Button variant='secondary' onClick={openModal}>
           ➕ Add User
@@ -251,51 +267,49 @@ const UserList = () => {
       
       <AddUserModal open={modalOpen} onClose={closeModal} />
       
-      <div style={{ position: 'relative' }}>
+      <TableContainer isTransitioning={isPending || isLoading}>
         <LoadingOverlay visible={isLoading}>
           <Spinner />
         </LoadingOverlay>
         
-        <TableContainer isTransitioning={isPending || isLoading}>
-          {showAllUsers ? (
-            <div style={{ height: '700px' }}>
-              <VirtualizedTable
-                data={userData}
-                columns={virtualizedColumns}
-                height="100%"
-                rowHeight={50}
-                actions={virtualizedActions}
-              />
-            </div>
-          ) : (
-            <Table 
-              columns={columns} 
-              data={userData || []} 
-              actions={actions}
-            />
-          )}
-        </TableContainer>
-      </div>
+        {showAllUsers ? (
+          <VirtualizedTable
+            data={userData}
+            columns={virtualizedColumns}
+            height="100%"
+            rowHeight={50}
+            actions={virtualizedActions}
+          />
+        ) : (
+          <Table 
+            columns={columns} 
+            data={userData || []} 
+            actions={actions}
+          />
+        )}
+      </TableContainer>
       
       {!showAllUsers && (
-        <TablePagination
-          page={page || 1}
-          pageSize={pageSize || 10}
-          total={pageParams.totalCount}
-          onPageChange={(newPage: number) => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('page', newPage.toString());
-            setSearchParams(newSearchParams);
-          }}
-          onPageSizeChange={(newPageSize: number) => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('pageSize', newPageSize.toString());
-            newSearchParams.set('page', '1');
-            setSearchParams(newSearchParams);
-          }}
-        />
+        <PaginationContainer>
+          <TablePagination
+            page={page || 1}
+            pageSize={pageSize || 10}
+            total={pageParams.totalCount}
+            onPageChange={(newPage: number) => {
+              const newSearchParams = new URLSearchParams(searchParams);
+              newSearchParams.set('page', newPage.toString());
+              setSearchParams(newSearchParams);
+            }}
+            onPageSizeChange={(newPageSize: number) => {
+              const newSearchParams = new URLSearchParams(searchParams);
+              newSearchParams.set('pageSize', newPageSize.toString());
+              newSearchParams.set('page', '1');
+              setSearchParams(newSearchParams);
+            }}
+          />
+        </PaginationContainer>
       )}
-    </>
+    </PageContainer>
   );
 };
 

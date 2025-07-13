@@ -14,12 +14,9 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    max-height: 100vh;
-    height:100vh;
+    height: 100vh;
+    overflow: hidden;
   }
-    body{
-    padding: 24px 40px;
-    }
 
   h1 {
     font-size: ${({ theme }) => theme.typography.h1.fontSize};
@@ -92,6 +89,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   #root {
+    height: 100vh;
     display: flex;
     flex-direction: column;
   }
