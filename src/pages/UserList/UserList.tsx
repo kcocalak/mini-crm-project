@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { useUsers } from '../../contenxt/UserContext';
 import Table, { type TableColumn, type TableAction } from '../../components/ui/Table/Table';
 import VirtualizedTable, { type Column } from '../../components/ui/Table/VirtualizedTable';
@@ -71,19 +71,39 @@ const UserList = () => {
   const navigate = useNavigate();
   const { users } = useUsers();
   const { pageParams, setPageParams } = usePageParams();
-  const searchParams = new URLSearchParams(location.search);
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchValue = searchParams.get('search');
   const page = Number(searchParams.get('page')) || 1;
   const pageSize = Number(searchParams.get('pageSize')) || 10;
+  const modalOpen = searchParams.get('modal') === 'add-user';
   const [userData, setUserData] = useState<User[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
+  const [inputValue, setInputValue] = useState(searchValue || '');
   
   useEffect(() => {
-    setPageParams((prev: any) => ({ ...prev, totalCount: Math.ceil(users.length) }));
-  }, []);
+    setInputValue(searchValue || '');
+  }, [searchValue]);
+  
+  useEffect(() => {
+    setPageParams((prev: { page: number; pageSize: number; totalCount: number }) => ({ 
+      ...prev, 
+      totalCount: Math.ceil(users.length) 
+    }));
+  }, [setPageParams, users.length]);
+
+  const openModal = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('modal', 'add-user');
+    setSearchParams(newSearchParams);
+  };
+
+  const closeModal = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete('modal');
+    setSearchParams(newSearchParams);
+  };
 
   const columns: TableColumn[] = [
     { key: 'name', label: 'Name' },
@@ -92,12 +112,12 @@ const UserList = () => {
     {
       key: 'createDate',
       label: 'Creation Date',
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value: Date) => new Date(value).toLocaleDateString(),
     },
     {
       key: 'active',
       label: 'Active',
-      render: (value) => value ? 'Yes' : 'No',
+      render: (value: boolean) => value ? 'Yes' : 'No',
     },
   ];
 
@@ -108,12 +128,12 @@ const UserList = () => {
     {
       key: 'createDate',
       header: 'Creation Date',
-      render: (value) => new Date(value).toLocaleDateString(),
+      render: (value: Date) => new Date(value).toLocaleDateString(),
     },
     {
       key: 'active',
       header: 'Active',
-      render: (value) => value ? 'Yes' : 'No',
+      render: (value: boolean) => value ? 'Yes' : 'No',
     },
   ];
 
@@ -133,18 +153,30 @@ const UserList = () => {
     },
   ];
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.value) {
-      navigate('/');
-    } else {
-      const searchQuery = `search=${event.target.value}&`;
-      const pageSizeQuery = `pageSize=${pageSize || 10}`;
-      const pageQuery = `page=${1}&`;
-      navigate(`?${searchQuery}${pageQuery}${pageSizeQuery}`);
-    }
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
   };
 
-  const debouncedHandleSearch = debounce(handleSearch, 300);
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+    
+    const newSearchParams = new URLSearchParams(searchParams);
+    
+    if (!value) {
+      newSearchParams.delete('search');
+    } else {
+      newSearchParams.set('search', value);
+    }
+    
+    newSearchParams.set('page', '1');
+    setSearchParams(newSearchParams);
+  };
+
+  const debouncedHandleSearch =  debounce((...args: unknown[]) => {
+    handleSearch(args[0] as React.ChangeEvent<HTMLInputElement>);
+  }, 300);
 
   const handleSwitchChange = (checked: boolean) => {
     setIsLoading(true);
@@ -162,12 +194,12 @@ const UserList = () => {
     if (!searchValue) {
       if (showAllUsers) {
         setUserData(users);
-        setPageParams((prev: any) => ({ ...prev, totalCount: users.length }));
+        setPageParams((prev: { page: number; pageSize: number; totalCount: number }) => ({ ...prev, totalCount: users.length }));
       } else {
         setUserData(
           users.slice(((page || 1) - 1) * (pageSize || 10), (page || 1) * (pageSize || 10)),
         );
-        setPageParams((prev: any) => ({ ...prev, totalCount: users.length }));
+        setPageParams((prev: { page: number; pageSize: number; totalCount: number }) => ({ ...prev, totalCount: users.length }));
       }
     } else {
       const filteredData = users.filter((user) =>
@@ -176,9 +208,9 @@ const UserList = () => {
       
       if (showAllUsers) {
         setUserData(filteredData);
-        setPageParams((prev: any) => ({ ...prev, totalCount: filteredData.length }));
+        setPageParams((prev: { page: number; pageSize: number; totalCount: number }) => ({ ...prev, totalCount: filteredData.length }));
       } else {
-        setPageParams((prev: any) => ({
+        setPageParams((prev: { page: number; pageSize: number; totalCount: number }) => ({
           ...prev,
           totalCount: Math.ceil(filteredData.length),
         }));
@@ -188,12 +220,12 @@ const UserList = () => {
         );
       }
     }
-  }, [searchValue, page, pageSize, showAllUsers, users]);
+  }, [searchValue, page, pageSize, showAllUsers, users, setPageParams]);
 
   return (
     <>
       <ControlsContainer>
-        <Button variant='secondary' onClick={() => setModalOpen(true)}>
+        <Button variant='secondary' onClick={openModal}>
           ➕ Add User
         </Button>
         
@@ -207,10 +239,17 @@ const UserList = () => {
           />
         </SwitchContainer>
         
-        <Input placeholder="Search" onChange={debouncedHandleSearch} />
+        <Input 
+          placeholder="Search" 
+          value={inputValue} 
+          onChange={(e) => {
+            handleInputChange(e);
+            debouncedHandleSearch(e);
+          }}
+        />
       </ControlsContainer>
       
-      <AddUserModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <AddUserModal open={modalOpen} onClose={closeModal} />
       
       <div style={{ position: 'relative' }}>
         <LoadingOverlay visible={isLoading}>
@@ -244,16 +283,15 @@ const UserList = () => {
           pageSize={pageSize || 10}
           total={pageParams.totalCount}
           onPageChange={(newPage: number) => {
-            const searchQuery = searchValue ? `search=${searchValue}&` : '';
-            const pageSizeQuery = `pageSize=${pageSize}`;
-            const pageQuery = `page=${newPage}&`;
-            navigate(`?${searchQuery}${pageQuery}${pageSizeQuery}`);
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('page', newPage.toString());
+            setSearchParams(newSearchParams);
           }}
           onPageSizeChange={(newPageSize: number) => {
-            const searchQuery = searchValue ? `search=${searchValue}&` : '';
-            const pageSizeQuery = `pageSize=${newPageSize}`;
-            const pageQuery = `page=${1}&`;
-            navigate(`?${searchQuery}${pageQuery}${pageSizeQuery}`);
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('pageSize', newPageSize.toString());
+            newSearchParams.set('page', '1');
+            setSearchParams(newSearchParams);
           }}
         />
       )}

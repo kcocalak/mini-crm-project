@@ -2,9 +2,12 @@ import { createContext, useContext, useState } from 'react';
 import type { User } from '../constants/types/User';
 import { faker } from '@faker-js/faker';
 
-export const UserContext = createContext({
-  users: [] as User[],
-  setUsers: (_: User[]) => {},
+export const UserContext = createContext<{
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+}>({
+  users: [],
+  setUsers: () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {

@@ -8,7 +8,7 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-export const Modal: React.FC<ModalProps> = ({ open, onClose, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ open, onClose, title, children }) => {
   if (!open) return null;
 
   return createPortal(
@@ -24,3 +24,4 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, title, children }) 
     document.body,
   );
 };
+export default Modal
