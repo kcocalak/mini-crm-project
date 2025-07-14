@@ -23,6 +23,7 @@ interface VirtualizedTableProps<T> {
     variant?: 'primary' | 'secondary' | 'danger' | 'outline';
     disabled?: (row: T) => boolean;
   }>;
+  emptyMessage?: string;
 }
 
 const ROW_HEIGHT = 50;
@@ -99,7 +100,26 @@ const VirtualizedTable = <T extends object>({
   height,
   rowHeight = ROW_HEIGHT,
   actions = [],
+  emptyMessage = 'No data found',
 }: VirtualizedTableProps<T>) => {
+  if (data.length === 0) {
+    return (
+      <div style={{
+        height,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        background: '#fff',
+        color: '#888',
+        fontSize: 18,
+      }}>
+        {emptyMessage}
+      </div>
+    );
+  }
+
   const VirtualizedBody = ({ height, width }: { height: number; width: number }) => {
     const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
       const row = data[index];

@@ -356,6 +356,7 @@ const UserList = () => {
               <CardGrid 
                 data={userData} 
                 onViewClick={(user) => navigate(`/users/${user.id}`)}
+                emptyMessage="No data found"
               />
             </div>
             {!showAllUsers && (
@@ -385,6 +386,7 @@ const UserList = () => {
               height="100%"
               rowHeight={50}
               actions={virtualizedActions}
+              emptyMessage="No data found"
             />
           </div>
         ) : (
@@ -393,6 +395,7 @@ const UserList = () => {
               columns={columns} 
               data={userData || []} 
               actions={actions}
+              emptyMessage="No data found"
             />
             <PaginationContainer>
               <TablePagination

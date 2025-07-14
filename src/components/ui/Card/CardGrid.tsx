@@ -8,6 +8,7 @@ import type { User } from '../../../constants/types/User';
 interface CardGridProps {
   data: User[];
   onViewClick: (user: User) => void;
+  emptyMessage?: string;
 }
 
 const GridContainer = styled.div`
@@ -21,7 +22,14 @@ const CARD_WIDTH = 320;
 const CARD_HEIGHT = 230;
 const CARD_GAP = 24;
 
-const CardGrid: React.FC<CardGridProps> = ({ data, onViewClick }) => {
+const CardGrid: React.FC<CardGridProps> = ({ data, onViewClick, emptyMessage = 'No data found' }) => {
+  if (data.length === 0) {
+    return (
+      <GridContainer style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', fontSize: 18 }}>
+        {emptyMessage}
+      </GridContainer>
+    );
+  }
   return (
     <GridContainer>
       <AutoSizer>
