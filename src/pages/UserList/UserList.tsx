@@ -208,14 +208,14 @@ const UserList = () => {
     {
       label: 'View',
       variant: 'outline',
-      onClick: (row) => navigate(`/user/${row.id}`),
+      onClick: (row) => navigate(`/users/${row.id}`),
     },
   ];
 
   const virtualizedActions = [
     {
       label: 'View',
-      onClick: (row: User) => navigate(`/user/${row.id}`),
+      onClick: (row: User) => navigate(`/users/${row.id}`),
       variant: 'outline' as const,
     },
   ];
@@ -355,7 +355,7 @@ const UserList = () => {
             }}>
               <CardGrid 
                 data={userData} 
-                onViewClick={(user) => navigate(`/user/${user.id}`)}
+                onViewClick={(user) => navigate(`/users/${user.id}`)}
               />
             </div>
             {!showAllUsers && (

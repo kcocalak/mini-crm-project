@@ -5,7 +5,6 @@ import {
   TableHeaderRow,
   TableHeaderCell,
   TableHeaderContent,
-  TableSortIndicator,
   TableBody,
   TableRow,
   TableCell,
@@ -21,7 +20,6 @@ export interface TableColumn {
   key: string;
   label: string;
   width?: string;
-  sortable?: boolean;
   render?: (value: any, row: any) => React.ReactNode;
 }
 
@@ -39,7 +37,6 @@ export interface TableProps {
   actions?: TableAction[];
   loading?: boolean;
   emptyMessage?: string;
-  onSort?: (key: string, direction: 'asc' | 'desc') => void;
   className?: string;
 }
 
@@ -49,25 +46,8 @@ const Table: React.FC<TableProps> = ({
   actions = [],
   loading = false,
   emptyMessage = 'No data found',
-  onSort,
   className = '',
 }) => {
-  const [sortConfig, setSortConfig] = React.useState<{
-    key: string;
-    direction: 'asc' | 'desc';
-  } | null>(null);
-
-  const handleSort = (key: string) => {
-    let direction: 'asc' | 'desc' = 'asc';
-
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-
-    setSortConfig({ key, direction });
-    onSort?.(key, direction);
-  };
-
   const renderCell = (column: TableColumn, row: any) => {
     const value = row[column.key];
 
@@ -95,21 +75,10 @@ const Table: React.FC<TableProps> = ({
             {columns.map((column) => (
               <TableHeaderCell
                 key={column.key}
-                sortable={column.sortable}
                 style={{ width: column.width }}
-                onClick={() => column.sortable && handleSort(column.key)}
               >
                 <TableHeaderContent>
                   {column.label}
-                  {column.sortable && (
-                    <TableSortIndicator>
-                      {sortConfig?.key === column.key
-                        ? sortConfig.direction === 'asc'
-                          ? '↑'
-                          : '↓'
-                        : '↕'}
-                    </TableSortIndicator>
-                  )}
                 </TableHeaderContent>
               </TableHeaderCell>
             ))}

@@ -38,7 +38,7 @@ export const TableHeaderRow = styled.tr`
 export const TableHeaderCell = styled.th<{ sortable?: boolean }>`
   padding: 10px 16px;
   text-align: left;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 0.875rem;
   color: ${({ theme }) => theme.colors.text.neutral};
   border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
@@ -99,6 +99,7 @@ export const TableCell = styled.td`
   max-width: 200px;
   width: 25%;
   font-size:0.875rem;
+  font-weight:400;
 
   &.table-cell--actions {
     width: 120px;

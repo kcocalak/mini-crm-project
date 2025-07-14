@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
         element: <UserList />,
       },
       {
-        path: 'user/:userId',
+        path: 'users/:userId',
         element: <UserDetail />,
       },
     ],

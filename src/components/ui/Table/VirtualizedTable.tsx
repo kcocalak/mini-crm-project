@@ -67,7 +67,7 @@ const VirtualizedCell = styled.div<{ width?: string }>`
 
 const VirtualizedTh = styled.div`
   padding: 10px 16px;
-  font-weight: 400;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.text.neutral};
   white-space: nowrap;
   overflow: hidden;

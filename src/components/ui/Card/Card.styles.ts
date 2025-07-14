@@ -32,6 +32,8 @@ export const UserName = styled.h3`
   font-size: 16px;
   font-weight: 600;
   color: #212529;
+  flex: 1;
+  min-width: 0;
 `;
 
 export const ActiveBadge = styled.span<{ active: boolean }>`
@@ -69,9 +71,9 @@ export const Label = styled.span`
 export const Value = styled.span`
   font-size: 14px;
   color: #495057;
-  word-break: break-word;
   line-height: 1.4;
   flex: 1;
+  min-width: 0;
 `;
 
 export const CardActions = styled.div`
